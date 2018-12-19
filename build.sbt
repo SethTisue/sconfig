@@ -58,6 +58,7 @@ lazy val root = (project in file("."))
   .aggregate(
     testLibJVM,
     sconfigJVM,
+    sconfigNative,
     simpleLibScala,
     simpleAppScala,
     complexAppScala,
@@ -116,6 +117,9 @@ lazy val sconfig = crossProject(JVMPlatform, NativePlatform)
 lazy val sconfigJVM = sconfig.jvm
   .dependsOn(testLibJVM % "test->test")
 
+lazy val sconfigNative = sconfig.native
+
+
 lazy val ignoredABIProblems = {
   import com.typesafe.tools.mima.core._
   import com.typesafe.tools.mima.core.ProblemFilters._
@@ -137,7 +141,10 @@ lazy val testLibJVM = testLib.jvm
 lazy val testLib = crossProject(JVMPlatform)
   .crossType(CrossType.Full)
   .in(file("test-lib"))
-  .settings(name := "sconfig-test-lib")
+  .settings(
+    name := "sconfig-test-lib",
+    publish / skip := true
+  )
 
 lazy val simpleLibScala = proj(
   "sconfig-simple-lib-scala",
