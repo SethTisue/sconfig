@@ -11,8 +11,9 @@ addCommandAlias(
   ).mkString(";", ";", "")
 )
 
-val scala211 = "2.11.12"
 val scala212 = "2.12.8"
+val scala211 = "2.11.12"
+val scalaVersions = List(scala212, scala211)
 
 val nextVersion = "0.8.0"
 // stable snapshot is not great for publish local
@@ -27,7 +28,7 @@ val scalacOpts = List("-unchecked", "-deprecation", "-feature")
 ThisBuild / Compile / scalacOptions := scalacOpts
 ThisBuild / Test / scalacOptions := scalacOpts
 
-ThisBuild / crossScalaVersions := Seq(scala212, scala211)
+ThisBuild / crossScalaVersions := scalaVersions
 
 inThisBuild(
   List(
@@ -69,6 +70,7 @@ lazy val root = (project in file("."))
   .settings(commonSettings)
   .settings(
     name := "sconfig-root",
+    crossScalaVersions := Nil,
     doc / aggregate := false,
     doc := (sconfigJVM / Compile / doc).value,
     packageDoc / aggregate := false,
@@ -79,6 +81,7 @@ lazy val sconfig = crossProject(JVMPlatform, NativePlatform)
   .crossType(CrossType.Full) // [Pure, Full, Dummy], default: CrossType.Full
   //.jsSettings(/* ... */) // defined in sbt-scalajs-crossproject
   .jvmSettings(
+    crossScalaVersions := scalaVersions,
     libraryDependencies += {
       val liftVersion = scalaBinaryVersion.value match {
         case "2.10" => "2.6.3" // last version that supports 2.10
@@ -113,7 +116,7 @@ lazy val sconfig = crossProject(JVMPlatform, NativePlatform)
     //sources in Test := Nil,
     //nativeLinkStubs := true,
     scalaVersion := scala211,
-    crossScalaVersions := Nil
+    crossScalaVersions := List(scala211)
   )
 
 lazy val sconfigJVM = sconfig.jvm
@@ -148,6 +151,7 @@ lazy val testLib = crossProject(JVMPlatform)
   .in(file("test-lib"))
   .settings(
     name := "sconfig-test-lib",
+    crossScalaVersions := scalaVersions,
     publish / skip := true
   )
 
