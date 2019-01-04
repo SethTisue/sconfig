@@ -11,8 +11,8 @@ addCommandAlias(
   ).mkString(";", ";", "")
 )
 
-val scala212 = "2.12.8"
-val scala211 = "2.11.12"
+val scala212      = "2.12.8"
+val scala211      = "2.11.12"
 val scalaVersions = List(scala212, scala211)
 
 val nextVersion = "0.8.0"
@@ -78,7 +78,7 @@ lazy val root = (project in file("."))
   )
 
 lazy val sconfig = crossProject(JVMPlatform, NativePlatform)
-  .crossType(CrossType.Full) // [Pure, Full, Dummy], default: CrossType.Full
+  .crossType(CrossType.Full)
   //.jsSettings(/* ... */) // defined in sbt-scalajs-crossproject
   .jvmSettings(
     crossScalaVersions := scalaVersions,
@@ -113,8 +113,7 @@ lazy val sconfig = crossProject(JVMPlatform, NativePlatform)
     mimaBinaryIssueFilters ++= ignoredABIProblems
   )
   .nativeSettings(
-    //sources in Test := Nil,
-    //nativeLinkStubs := true,
+    nativeLinkStubs := true,
     scalaVersion := scala211,
     crossScalaVersions := List(scala211)
   )
